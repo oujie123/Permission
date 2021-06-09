@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    coreApp="true"
+    package="com.gxatek.permission"
+    android:sharedUserId="android.uid.system">
+     <uses-permission android:name="android.permission.GRANT_RUNTIME_PERMISSIONS" />
+     <uses-permission android:name="android.permission.REVOKE_RUNTIME_PERMISSIONS" />
+     <uses-permission android:name="android.permission.GET_RUNTIME_PERMISSIONS" />
+     <uses-permission android:name="android.permission.MANAGE_APP_OPS_MODES" />
+     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:name=".CoreApplication"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name">
+        <activity android:name="com.gxatek.permission.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!--hide view for user, could open this page by command-->
+                <!--<action android:name="android.intent.action.VIEW" />-->
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".CoreService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.OBSERVE_GRANT_REVOKE_PERMISSIONS" />
+    </application>
+
+</manifest>
