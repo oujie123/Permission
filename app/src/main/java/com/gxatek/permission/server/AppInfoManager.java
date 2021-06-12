@@ -22,7 +22,6 @@ import com.gxatek.permission.Utils.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,80 +29,179 @@ import java.util.Map;
  * @author Jack_Ou  created on 2021/3/1.
  */
 public class AppInfoManager {
+    private static final String TAG = Constants.TAG + "_AppInfoManager";
+
+    private static final String TS_INSTALL_PACKAGES = "/data/system/gxa_install_packages.json";
+
     private static final String PACKAGE_INSTALLER_NAME = "com.android.packageinstaller";
+
+    private static final String PRESET_DIR_VENDOR_APP = "/vendor/app/";
     private static final String PRESET_DIR_SYSTEM_APP = "/system/app/";
     private static final String PRESET_DIR_SYSTEM_PRIVAPP = "/system/priv-app/";
-    private static final String PRESET_DIR_VENDOR_APP = "/vendor/app/";
-    private static final String TAG = Constants.TAG + AppInfoManager.class.getSimpleName();
-    private static final String TS_INSTALL_PACKAGES = "/data/system/ts_install_packages.json";
+
     private static AppInfoManager mInstance;
-    private Map<String, String> mInstallPackageMap;
-    private Map<String, String> mOldInstallMap;
     private PackageManager mPm;
-    private List<String> mPresetDirs;
     private List<String> mPresetShops;
-    private Map<String, String> mTempInstallMap;
+    private Map<String, String> mInstallPackageMap;
 
-    private AppInfoManager(PackageManager paramPackageManager) {
-        this.mPm = paramPackageManager;
-        this.mInstallPackageMap = new HashMap();
-        this.mTempInstallMap = new HashMap();
-        this.mOldInstallMap = new HashMap();
-        initPresetDirs();
-        readInstallPackages();
-    }
+    private Map<String,String> mTempInstallMap;
+    private Map<String,String> mOldInstallMap;
 
-    private boolean checkInstallPackage(String packageName) {
-        if (this.mPm == null) {
-            Log.w(TAG, "PackageManager is null");
-            return false;
-        }
-        return isPackageInPresetShops(this.mPm.getInstallerPackageName(packageName));
-    }
+    private List<String> mPresetDirs;
 
-    private boolean checkPresetApp(String appPath) {
-        if (appPath == null) {
-            return false;
-        }
-        Iterator iterator = this.mPresetDirs.iterator();
-        while (iterator.hasNext()) {
-            if (appPath.contains((String) iterator.next())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static AppInfoManager getInstance(PackageManager paramPackageManager) {
+    /**
+     * singleton.
+     */
+    public static AppInfoManager getInstance(PackageManager pm) {
         if (mInstance == null) {
             synchronized (AppInfoManager.class) {
                 if (mInstance == null) {
-                    mInstance = new AppInfoManager(paramPackageManager);
+                    mInstance = new AppInfoManager(pm);
                 }
             }
         }
         return mInstance;
     }
 
-    private void initPresetDirs() {
-        this.mPresetDirs = new ArrayList<>();
-        this.mPresetDirs.add(PRESET_DIR_VENDOR_APP);
-        this.mPresetDirs.add(PRESET_DIR_SYSTEM_APP);
-        this.mPresetDirs.add(PRESET_DIR_SYSTEM_PRIVAPP);
+    private AppInfoManager(PackageManager pm) {
+        mPm = pm;
+        mInstallPackageMap = new HashMap<>();
+        mTempInstallMap = new HashMap<>();
+        mOldInstallMap = new HashMap<>();
+        initPresetDirs();
+        readInstallPackages();
     }
 
-    private boolean isPackageInPresetShops(String installerPackageName) {
-        if ((installerPackageName != null) && (this.mPresetShops != null) && (this.mPresetShops.size() > 0)) {
-            return this.mPresetShops.contains(installerPackageName);
+    private void initPresetDirs() {
+        mPresetDirs = new ArrayList<>();
+        mPresetDirs.add(PRESET_DIR_VENDOR_APP);
+        mPresetDirs.add(PRESET_DIR_SYSTEM_APP);
+        mPresetDirs.add(PRESET_DIR_SYSTEM_PRIVAPP);
+    }
+
+    /**
+     * set dirs of preset apps.
+     * @param presetDirs the dirs of preset apps
+     */
+    public void setPresetDirs(List<String> presetDirs) {
+        if (presetDirs != null) {
+            this.mPresetDirs = presetDirs;
+        }
+    }
+
+    /**
+     * set dirs of preset shop apps.
+     * @param presetShops the dirs of preset shop apps
+     */
+    public void setPresetShops(List<String> presetShops) {
+        this.mPresetShops = presetShops;
+    }
+
+    /**
+     * check if it is signature verification passed app.
+     */
+    public boolean isSignatureApp(String packageName) {
+        // TODO should signature check function.
+        return false;
+    }
+
+    /**
+     * check if it is preset app with packageName.
+     */
+    public boolean isPresetApp(String packageName) {
+        if (TextUtils.isEmpty(packageName)) {
+            Log.w(TAG,"packageName cannot be null when check preset app");
+            return false;
+        }
+        if (mPm == null) {
+            Log.w(TAG,"PackageManager is null");
+            return false;
+        }
+        ApplicationInfo appInfo = null;
+        try {
+            appInfo = mPm.getApplicationInfo(packageName,0);
+        } catch (PackageManager.NameNotFoundException exception) {
+            Log.e(TAG,"cannot file the app with the packageName : " + packageName,exception);
+        }
+        if (appInfo != null) {
+            if (TextUtils.isEmpty(appInfo.sourceDir)) {
+                Log.w(TAG,"cannot found the apk path with the packageName : " + packageName);
+            } else {
+                return checkPresetApp(appInfo.sourceDir);
+            }
         }
         return false;
     }
 
-    private void readInstallPackages() {
-        this.mInstallPackageMap.clear();
-        Map localMap = (Map) new CarGson().getObjectFromJsonFile(TS_INSTALL_PACKAGES, this.mInstallPackageMap.getClass());
-        if (localMap != null) {
-            this.mInstallPackageMap.putAll(localMap);
+    /**
+     * check if it is preset app with ApplicationInfo.
+     */
+    public boolean isPresetApp(ApplicationInfo appInfo) {
+        if (appInfo != null) {
+            if (TextUtils.isEmpty(appInfo.sourceDir)) {
+                Log.w(TAG,"cannot found the apk path with the packageName : " + appInfo);
+            } else {
+                return checkPresetApp(appInfo.sourceDir);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * check if it is preset app with packageName.
+     */
+    public boolean isShopApp(String packageName) {
+        if (mPresetShops == null || mPresetShops.size() == 0 || TextUtils.isEmpty(packageName)) {
+            return false;
+        }
+        boolean checkInstaller = checkInstallPackage(packageName);
+        if (checkInstaller) {
+            return true;
+        }
+        readInstallPackages();
+        String installPackageName = mInstallPackageMap.get(packageName);
+        if (installPackageName != null) {
+            return isPackageInPresetShops(installPackageName);
+        }
+        return false;
+    }
+
+    private boolean checkInstallPackage(String packageName) {
+        if (mPm == null) {
+            Log.w(TAG,"PackageManager is null");
+            return false;
+        }
+        String installerPackageName = mPm.getInstallerPackageName(packageName);
+        return isPackageInPresetShops(installerPackageName);
+    }
+
+    /**
+     * App install event from PackageInstaller.
+     */
+    public void installPackageByPi(String packageName, String installerPackageName) {
+        if (TextUtils.isEmpty(packageName) || TextUtils.isEmpty(installerPackageName)) {
+            return;
+        }
+        mTempInstallMap.put(packageName,installerPackageName);
+    }
+
+    /**
+     * App install event from PackageManagerService.
+     */
+    public void installStageByPms(String packageName, String installerPackageName) {
+        if (TextUtils.isEmpty(packageName) || TextUtils.isEmpty(installerPackageName)) {
+            return;
+        }
+        if (TextUtils.equals(installerPackageName, PACKAGE_INSTALLER_NAME)) {
+            String tempInstallName = mTempInstallMap.get(packageName);
+            if (tempInstallName != null) {
+                refreshInstallMap(packageName, tempInstallName);
+                writeInstallPackagesIntoJsonFile();
+            }
+            mTempInstallMap.remove(packageName);
+        } else {
+            refreshInstallMap(packageName, installerPackageName);
+            writeInstallPackagesIntoJsonFile();
         }
     }
 
@@ -114,131 +212,79 @@ public class AppInfoManager {
      * {"bubei.tingshu.hd":"cn.gaei.appstore"}
      *
      * @param packageName
-     * @param installerPackageName
+     * @param tempInstallName
      */
-    private void refreshInstallMap(String packageName, String installerPackageName) {
-        if (isPackageInPresetShops(installerPackageName)) {
-            if (this.mInstallPackageMap.containsKey(packageName)) {
-                this.mOldInstallMap.put(packageName, this.mInstallPackageMap.get(packageName));
+    private void refreshInstallMap(String packageName, String tempInstallName) {
+        if (isPackageInPresetShops(tempInstallName)) {
+            if (mInstallPackageMap.containsKey(packageName)) {
+                mOldInstallMap.put(packageName, mInstallPackageMap.get(packageName));
             }
-            this.mInstallPackageMap.put(packageName, installerPackageName);
+            mInstallPackageMap.put(packageName, tempInstallName);
         } else {
-            if (this.mInstallPackageMap.containsKey(packageName)) {
-                this.mOldInstallMap.put(packageName, this.mInstallPackageMap.get(packageName));
+            if (mInstallPackageMap.containsKey(packageName)) {
+                mOldInstallMap.put(packageName, mInstallPackageMap.get(packageName));
             }
-            this.mInstallPackageMap.remove(packageName);
+            mInstallPackageMap.remove(packageName);
         }
     }
 
-    private void writeInstallPackagesIntoJsonFile() {
-        if (new CarGson().writeObjectToJsonFile(TS_INSTALL_PACKAGES, this.mInstallPackageMap)) {
-            Log.i(TAG, "write install packages success");
-        } else {
-            Log.i(TAG, "write install packages failed");
-        }
-    }
-
+    /**
+     * handle install result.
+     * @param packageName install packageName
+     * @param success install success or failed
+     */
     public void handlePackagePostInstall(String packageName, boolean success) {
         if (packageName == null) {
             return;
         }
         if (!success) {
-            if (this.mOldInstallMap.containsKey(packageName)) {
-                this.mInstallPackageMap.put(packageName, this.mOldInstallMap.remove(packageName));
+            if (mOldInstallMap.containsKey(packageName)) {
+                mInstallPackageMap.put(packageName,mOldInstallMap.remove(packageName));
                 writeInstallPackagesIntoJsonFile();
             }
         } else {
-            this.mOldInstallMap.remove(packageName);
+            mOldInstallMap.remove(packageName);
         }
     }
 
-    public void installPackageByPi(String packageName, String installerPackageName) {
-        if (!TextUtils.isEmpty(packageName) && !TextUtils.isEmpty(installerPackageName)) {
-            this.mTempInstallMap.put(packageName, installerPackageName);
+    private void writeInstallPackagesIntoJsonFile() {
+        CarGson carGson = new CarGson();
+        boolean writeFlag = carGson.writeObjectToJsonFile(TS_INSTALL_PACKAGES, mInstallPackageMap);
+        if (writeFlag) {
+            Log.i(TAG,"write install packages success");
+        } else {
+            Log.i(TAG,"write install packages failed");
         }
     }
 
-    public void installStageByPms(String packageName, String installerPackageName) {
-        if (!TextUtils.isEmpty(packageName) && !TextUtils.isEmpty(installerPackageName)) {
-            if (TextUtils.equals(installerPackageName, PACKAGE_INSTALLER_NAME)) {
-                String installer = this.mTempInstallMap.get(packageName);
-                if (installer != null) {
-                    refreshInstallMap(packageName, installer);
-                    writeInstallPackagesIntoJsonFile();
-                }
-                this.mTempInstallMap.remove(packageName);
-            } else {
-                refreshInstallMap(packageName, installerPackageName);
-                writeInstallPackagesIntoJsonFile();
-            }
-        }
-    }
-
-    public boolean isPresetApp(ApplicationInfo appInfo) {
-        if (appInfo != null) {
-            if (TextUtils.isEmpty(appInfo.sourceDir)) {
-                Log.w(TAG, "cannot found the apk path with the packageName : " + appInfo);
-            } else {
-                return checkPresetApp(appInfo.sourceDir);
+    private boolean isPackageInPresetShops(String packageName) {
+        if (packageName != null) {
+            if (mPresetShops != null && mPresetShops.size() > 0) {
+                return mPresetShops.contains(packageName);
             }
         }
         return false;
     }
 
-    public boolean isPresetApp(String packageName) {
-        if (TextUtils.isEmpty(packageName)) {
-            Log.w(TAG, "packageName cannot be null when check preset app");
-            return false;
+    private void readInstallPackages() {
+        mInstallPackageMap.clear();
+        CarGson carGson = new CarGson();
+        Map<String, String> map = carGson.getObjectFromJsonFile(
+                TS_INSTALL_PACKAGES,mInstallPackageMap.getClass());
+        if (map != null) {
+            mInstallPackageMap.putAll(map);
         }
-        if (this.mPm == null) {
-            Log.w(TAG, "PackageManager is null");
-            return false;
-        }
-        ApplicationInfo appInfo = null;
-        try {
-            appInfo = this.mPm.getApplicationInfo(packageName, 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, "cannot find the app with the packageName : " + packageName, e);
-        }
-        if (appInfo != null) {
-            if (TextUtils.isEmpty(appInfo.sourceDir)) {
-                Log.w(TAG, "cannot found the apk path with the packageName : " + packageName);
-                return false;
-            }
-            return checkPresetApp(appInfo.sourceDir);
-        }
-        return false;
     }
 
-    public boolean isShopApp(String packageName) {
-        if ((this.mPresetShops != null) && (this.mPresetShops.size() != 0)) {
-            if (TextUtils.isEmpty(packageName)) {
-                return false;
-            }
-            if (checkInstallPackage(packageName)) {
+    private boolean checkPresetApp(String apkPath) {
+        if (apkPath == null) {
+            return false;
+        }
+        for (String presetDir : mPresetDirs) {
+            if (apkPath.contains(presetDir)) {
                 return true;
             }
-            readInstallPackages();
-            String installerPackageName = this.mInstallPackageMap.get(packageName);
-            if (installerPackageName != null) {
-                return isPackageInPresetShops(installerPackageName);
-            }
-            return false;
         }
         return false;
-    }
-
-    public boolean isSignatureApp(String paramString) {
-        return false;
-    }
-
-    public void setPresetDirs(List<String> presetDirs) {
-        if (presetDirs != null) {
-            this.mPresetDirs = presetDirs;
-        }
-    }
-
-    public void setPresetShops(List<String> presetShops) {
-        this.mPresetShops = presetShops;
     }
 }

@@ -15,6 +15,8 @@ package com.gxatek.permission.bean;
 import com.gxatek.permission.Utils.Constants;
 
 /**
+ * Config base javabean.
+ *
  * @author Jack_Ou  created on 2021/3/1.
  */
 public abstract class BaseConfig
@@ -22,8 +24,10 @@ public abstract class BaseConfig
     protected static final String TAG = Constants.TAG + BaseConfig.class.getSimpleName();
     protected int checkMark;
 
-    protected boolean isValid()
-    {
-        return this.checkMark <= 0;
+    /**
+     * check effectiveness.
+     */
+    protected boolean isValid() {
+        return checkMark <= 0;
     }
 }

@@ -21,14 +21,18 @@ import com.gxatek.permission.bean.PermissionConfig;
 import java.io.File;
 
 /**
+ * Manager for read config.
  * @author Jack_Ou  created on 2021/3/2.
  */
 public class ConfigManager {
-    private static final String PERMISSION_CONFIG_DIR = "/vendor/etc/data/ts_permission_config.json";
+    private static final String PERMISSION_CONFIG_DIR = "/vendor/etc/data/gxa_permission_config.json";
     private static final String PERMISSION_CONFIG_DIR_PRIMARY = "/vendor/etc/data/permission_config.json";
     private static final String TAG = Constants.TAG + ConfigManager.class.getSimpleName();
     private static ConfigManager mInstance;
 
+    /**
+     * singleton.
+     */
     public static ConfigManager getInstance() {
         if (mInstance == null) {
             synchronized (ConfigManager.class) {
@@ -40,6 +44,9 @@ public class ConfigManager {
         return mInstance;
     }
 
+    /**
+     * read config from file.
+     */
     public PermissionConfig readPermissionConfig() {
         CarGson carGson = new CarGson();
         File file = new File(PERMISSION_CONFIG_DIR_PRIMARY);

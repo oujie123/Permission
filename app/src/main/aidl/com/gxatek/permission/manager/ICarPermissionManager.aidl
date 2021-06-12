@@ -13,8 +13,12 @@
 package com.gxatek.permission.manager;
 
 interface ICarPermissionManager {
+
     int checkPermission(String packageName, String permissionName);
+
     void handlePackagePostInstall(String packageName, boolean success);
+
     void installPackageByPi(String packageName, String installerPackageName);
+
     void installStageByPms(String packageName, String installerPackageName);
 }

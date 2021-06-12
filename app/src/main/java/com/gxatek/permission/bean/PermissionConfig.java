@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * Javabean read from ts_permission_config.
+ *
  * @author Jack_Ou  created on 2021/3/1.
  */
 public class PermissionConfig {
@@ -30,21 +32,28 @@ public class PermissionConfig {
     private List<Rule> rules;
     private int version;
 
+    /**
+     * check config.
+     */
     public void checkConfig() {
-        if ((this.rules != null) && (this.rules.size() != 0)) {
-            Iterator iterator = this.rules.iterator();
+        if (rules == null || rules.size() == 0) {
+            Log.w(TAG, "no permission rules");
+        } else {
+            Iterator<Rule> iterator = rules.iterator();
             while (iterator.hasNext()) {
-                Rule rule = (Rule) iterator.next();
+                Rule rule = iterator.next();
                 if (rule == null) {
                     iterator.remove();
-                } else if ((!rule.isValid()) || (!rule.isEnable())) {
-                    iterator.remove();
+                } else {
+                    boolean isValid = rule.isValid();
+                    if (!isValid || !rule.isEnable()) {
+                        iterator.remove();
+                    }
                 }
             }
-            Collections.sort(this.rules);
-        } else {
-            Log.w(TAG, "no permission rules");
+            Collections.sort(rules);
         }
+
     }
 
     public List<String> getPresetPaths() {

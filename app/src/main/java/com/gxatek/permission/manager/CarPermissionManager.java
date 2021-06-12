@@ -14,17 +14,17 @@ package com.gxatek.permission.manager;
 
 import android.content.Context;
 
-import com.gxatek.permission.Utils.Constants;
-
 /**
  * @author Jack_Ou  created on 2021/3/2.
  */
 public abstract class CarPermissionManager {
-    public static final int PERMISSION_DEFAULT = 4;
-    public static final int PERMISSION_DENIED = 2;
+    protected static final String TAG = CarPermissionManager.class.getSimpleName();
+
     public static final int PERMISSION_GRANTED = 1;
+    public static final int PERMISSION_DENIED = 2;
     public static final int PERMISSION_INQUIRY = 3;
-    protected static final String TAG = Constants.TAG + CarPermissionManager.class.getSimpleName();
+    public static final int PERMISSION_DEFAULT = 4;
+
     private static CarPermissionManagerImpl mPermissionManager;
 
     public static CarPermissionManager getPermissionManager(Context context) {
@@ -38,12 +38,38 @@ public abstract class CarPermissionManager {
         return mPermissionManager;
     }
 
-    public abstract int checkPermission(String packageName, String permissionName);
+    /**
+     * Check permission from the permission config file by packageName and permissionName.
+     * @param packageName The name of the package you are checking against.
+     * @param permissionName The name of the permission you are checking for.
+     * @return the permission status in config.
+     *
+     * @see #PERMISSION_GRANTED
+     * @see #PERMISSION_DENIED
+     * @see #PERMISSION_INQUIRY
+     * @see #PERMISSION_DEFAULT
+     */
+    public abstract int checkPermission(String packageName,String permissionName);
 
-    public abstract void handlePackagePostInstall(String packageName, boolean success);
-
+    /**
+     * Install package from PackageInstaller.
+     * @param packageName The name of the package you are installing.
+     * @param installerPackageName The name of the installer package.
+     */
     public abstract void installPackageByPi(String packageName, String installerPackageName);
 
+    /**
+     * Install package from PackageManagerService.
+     * @param packageName The name of the package you are installing.
+     * @param installerPackageName The name of the installer package.
+     */
     public abstract void installStageByPms(String packageName, String installerPackageName);
+
+    /**
+     * Handle install result.
+     * @param packageName install packageName.
+     * @param success install success or failed.
+     */
+    public abstract void handlePackagePostInstall(String packageName,boolean success);
 }
 

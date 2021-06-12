@@ -18,62 +18,27 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * White app permission config javabean.
+ *
  * @author Jack_Ou  created on 2021/3/1.
  */
 public class App extends BaseConfig {
+
+    private List<String> packageNames;
     private int authorizationType;
     private int defaultState;
-    private List<String> packageNames;
     private List<Permission> permissions;
 
-    private void checkAuthorizationType() {
-        switch (this.authorizationType) {
-            case Rule.ALL_GRANTED:
-            case Rule.ALL_DENIED:
-                Log.i(TAG, "App authorizationType value is " + this.authorizationType);
-                break;
-            case Rule.PART_GRANTED:
-                checkPermissions();
-                break;
-            default:
-                Log.w(TAG, "App authorizationType error,the error authorizationType value is " + this.authorizationType);
-                this.checkMark += 1;
-        }
+    public List<String> getPackageNames() {
+        return packageNames;
     }
 
-    private void checkPermissions() {
-        if (permissions != null && permissions.size() > 0){
-            Iterator iterator = permissions.iterator();
-            while (iterator.hasNext()) {
-                Permission permission = (Permission) iterator.next();
-                if (permission == null) {
-                    iterator.remove();
-                } else if (!permission.isValid()) {
-                    iterator.remove();
-                }
-            }
-        } else {
-            Log.w(TAG, "permissions cannot be null when app authorizationType value is PART_GRANTED");
-        }
-    }
-
-    @Override
-    public boolean isValid() {
-        this.checkMark = 0;
-        if ((this.packageNames == null) || (this.packageNames.size() == 0)) {
-            Log.w(TAG, "app packageNames cannot be null");
-            this.checkMark += 1;
-        }
-        checkAuthorizationType();
-        return this.checkMark <= 0;
+    public void setPackageNames(List<String> packageNames) {
+        this.packageNames = packageNames;
     }
 
     public int getAuthorizationType() {
         return authorizationType;
-    }
-
-    public void setAuthorizationType(int authorizationType) {
-        this.authorizationType = authorizationType;
     }
 
     public int getDefaultState() {
@@ -84,12 +49,8 @@ public class App extends BaseConfig {
         this.defaultState = defaultState;
     }
 
-    public List<String> getPackageNames() {
-        return packageNames;
-    }
-
-    public void setPackageNames(List<String> packageNames) {
-        this.packageNames = packageNames;
+    public void setAuthorizationType(int authorizationType) {
+        this.authorizationType = authorizationType;
     }
 
     public List<Permission> getPermissions() {
@@ -98,5 +59,50 @@ public class App extends BaseConfig {
 
     public void setPermissions(List<Permission> permissions) {
         this.permissions = permissions;
+    }
+
+    @Override
+    public boolean isValid() {
+        checkMark = 0;
+        if (packageNames == null || packageNames.size() == 0) {
+            Log.w(TAG,"app packageNames cannot be null");
+            checkMark++;
+        }
+        checkAuthorizationType();
+        return checkMark > 0 ? false : true;
+    }
+
+    private void checkAuthorizationType() {
+        switch (authorizationType) {
+            case Rule.PART_GRANTED:
+                checkPermissions();
+                break;
+            case Rule.ALL_GRANTED:
+            case Rule.ALL_DENIED:
+                break;
+            default:
+                Log.w(TAG,"App authorizationType error,the error authorizationType value is " + authorizationType);
+                checkMark++;
+                break;
+        }
+    }
+
+    private void checkPermissions() {
+        if (permissions == null || permissions.size() == 0) {
+            Log.w(TAG,"permissions cannot be null when app authorizationType value is PART_GRANTED");
+        } else {
+            Iterator<Permission> iterator = permissions.iterator();
+            while (iterator.hasNext()) {
+                Permission permission = iterator.next();
+                if (permission == null) {
+                    iterator.remove();
+                } else {
+                    boolean isValid = permission.isValid();
+                    if (!isValid) {
+                        iterator.remove();
+                    }
+                }
+            }
+        }
     }
 }

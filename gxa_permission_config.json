@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "presetPaths": [
+      "/vendor/app/",
+      "/system/app/",
+      "/system/priv-app/"
+  ],
+  "presetShops": [
+      "cn.gaei.appstore"
+   ],
+   "rules": [{
+           "majorType": 1,
+           "priority": 1000,
+           "enable": true,
+           "apps": [{
+               "packageNames": [
+                   "cn.gaei.appstore"
+               ],
+               "authorizationType": 1
+           }]
+       },
+       {
+           "majorType": 3,
+           "priority": 900,
+           "enable": true,
+           "authorizationType": 1
+       },
+       {
+           "majorType": 4,
+           "priority": 800,
+           "enable": true,
+           "authorizationType": 1
+       },
+       {
+           "majorType": 5,
+           "priority": 600,
+           "enable": true,
+           "authorizationType": 2,
+           "permissions": [{
+               "name": "android.permission.REQUEST_INSTALL_PACKAGES",
+               "status": 2
+           }]
+       }
+   ]
+}

@@ -21,72 +21,77 @@ import java.util.List;
  * @author Jack_Ou  created on 2021/3/1.
  */
 public class Rule extends BaseConfig implements Comparable<Rule> {
-    public static final int ALL_DENIED = 3;
-    public static final int PART_GRANTED = 2;
+    public static final int MAJORTYPE_WHITE = 1;    //white app
+    public static final int MAJORTYPE_SIGNATURE = 2;    //signature check pass app
+    public static final int MAJORTYPE_PRESET = 3;    //preset app
+    public static final int MAJORTYPE_SHOP = 4;    //preset shop app
+    public static final int MAJORTYPE_OTHER = 5;    //other app
+
     public static final int ALL_GRANTED = 1;
-    public static final int ERROR = 4;
-    public static final int DEFAULT_STATE_DENIED = 2;
+    public static final int PART_GRANTED = 2;
+    public static final int ALL_DENIED = 3;
+
     public static final int DEFAULT_STATE_GRANTED = 1;
-    public static final int MAJORTYPE_OTHER = 5;
-    public static final int MAJORTYPE_PRESET = 3;
-    public static final int MAJORTYPE_SHOP = 4;
-    public static final int MAJORTYPE_SIGNATURE = 2;
-    public static final int MAJORTYPE_WHITE = 1;
-    private List<App> apps;
+    public static final int DEFAULT_STATE_DENIED = 2;
+
+    private int majorType;
+    private int priority;
+    private boolean enable;
     private int authorizationType;
     private int defaultState;
-    private boolean enable;
-    private int majorType;
+    private List<App> apps;
     private List<Permission> permissions;
-    private int priority;
 
     private void checkApps() {
-        if (apps != null && apps.size() != 0) {
-            Iterator iterator = apps.iterator();
+        if (apps == null || apps.size() == 0) {
+            Log.w(TAG,"apps cannot be null when majorType value is 1");
+        } else {
+            Iterator<App> iterator = apps.iterator();
             while (iterator.hasNext()) {
-                App app = (App) iterator.next();
+                App app = iterator.next();
                 if (app == null) {
                     iterator.remove();
-                } else if (!app.isValid()) {
-                    iterator.remove();
+                } else {
+                    boolean isValid = app.isValid();
+                    if (!isValid) {
+                        iterator.remove();
+                    }
                 }
             }
-        } else {
-            Log.w(TAG, "apps cannot be null when majorType value is 1");
         }
     }
 
     private void checkAuthorizationType() {
-        switch (this.authorizationType) {
-            case ALL_DENIED:
-            case ALL_GRANTED:
-                Log.i(TAG, "Rule authorizationType value is " + this.authorizationType +
-                        ", majorType" + this.majorType);
-                break;
+        switch (authorizationType) {
             case PART_GRANTED:
                 checkPermissions();
                 break;
+            case ALL_GRANTED:
+            case ALL_DENIED:
+                break;
             default:
-                Log.w(TAG, "Rule authorizationType error,the error authorizationType value is "
-                        + this.authorizationType);
-                this.checkMark += 1;
+                Log.w(TAG,"Rule authorizationType error,the error authorizationType value is " + authorizationType);
+                checkMark++;
                 break;
         }
     }
 
     private void checkPermissions() {
-        if (permissions != null && permissions.size() > 0) {
-            Iterator iterator = permissions.iterator();
+        if (permissions == null || permissions.size() == 0) {
+            Log.w(TAG,"permissions cannot be null when rule authorizationType value is 2");
+        } else {
+            Iterator<Permission> iterator = permissions.iterator();
             while (iterator.hasNext()) {
-                Permission permission = (Permission) iterator.next();
+                Permission permission = iterator.next();
                 if (permission == null) {
                     iterator.remove();
-                } else if (!permission.isValid()) {
-                    iterator.remove();
+                } else {
+                    boolean isValid = permission.isValid();
+                    if (!isValid) {
+                        iterator.remove();
+                    }
                 }
             }
-        } else {
-            Log.w(TAG, "permissions cannot be null when app authorizationType value is PART_GRANTED");
         }
     }
 
@@ -97,20 +102,20 @@ public class Rule extends BaseConfig implements Comparable<Rule> {
 
     @Override
     public boolean isValid() {
-        this.checkMark = 0;
-        switch (this.majorType) {
+        checkMark = 0;
+        switch (majorType) {
             case MAJORTYPE_WHITE:
                 checkApps();
                 break;
             case MAJORTYPE_SIGNATURE:
-            case MAJORTYPE_SHOP:
             case MAJORTYPE_PRESET:
+            case MAJORTYPE_SHOP:
             case MAJORTYPE_OTHER:
                 checkAuthorizationType();
                 break;
             default:
-                Log.w(TAG, "majorType error,the error majorType value is " + this.majorType);
-                this.checkMark += 1;
+                Log.w(TAG,"majorType error,the error majorType value is " + majorType);
+                checkMark++;
                 break;
         }
         return super.isValid();

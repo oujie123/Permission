@@ -20,6 +20,8 @@ import android.os.IBinder;
 import android.os.RemoteException;
 
 /**
+ * Realize CarPermissionManager.
+ *
  * @author Jack_Ou  created on 2021/3/2.
  */
 public class CarPermissionManagerImpl extends CarPermissionManager {

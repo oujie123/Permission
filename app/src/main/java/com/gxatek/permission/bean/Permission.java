@@ -16,21 +16,13 @@ import android.text.TextUtils;
 import android.util.Log;
 
 /**
+ * Permission info javabean.
+ *
  * @author Jack_Ou  created on 2021/3/1.
  */
 public class Permission extends BaseConfig {
     private String name;
     private int status;
-
-    @Override
-    public boolean isValid() {
-        this.checkMark = 0;
-        if (TextUtils.isEmpty(this.name)) {
-            Log.w(TAG, "permission name cannot be null");
-            this.checkMark += 1;
-        }
-        return this.checkMark <= 0;
-    }
 
     public String getName() {
         return name;
@@ -46,6 +38,16 @@ public class Permission extends BaseConfig {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    @Override
+    public boolean isValid() {
+        checkMark = 0;
+        if (TextUtils.isEmpty(name)) {
+            Log.w(TAG,"permission name cannot be null");
+            checkMark++;
+        }
+        return checkMark <= 0;
     }
 
     @Override
