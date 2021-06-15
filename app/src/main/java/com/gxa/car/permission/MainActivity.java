@@ -1,4 +1,4 @@
-package com.gxatek.permission;
+package com.gxa.car.permission;
 
 import android.app.Activity;
 import android.os.Bundle;

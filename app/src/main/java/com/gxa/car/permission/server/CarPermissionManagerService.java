@@ -10,7 +10,7 @@
  * DATE            NAME     DESCRIPTION
  * 2021-05-31     jieou     init
  */
-package com.gxatek.permission.server;
+package com.gxa.car.permission.server;
 
 import android.app.AppOpsManager;
 import android.content.Context;
@@ -23,16 +23,17 @@ import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.gxatek.permission.Utils.Constants;
-import com.gxatek.permission.Utils.LogUtil;
-import com.gxatek.permission.bean.App;
-import com.gxatek.permission.bean.Permission;
-import com.gxatek.permission.bean.PermissionConfig;
-import com.gxatek.permission.bean.Rule;
-import com.gxatek.permission.manager.CarPermissionManager;
-import com.gxatek.permission.manager.ICarPermissionManager;
+import com.gxa.car.permission.Utils.Constants;
+import com.gxa.car.permission.Utils.LogUtil;
+import com.gxa.car.permission.bean.App;
+import com.gxa.car.permission.bean.Permission;
+import com.gxa.car.permission.bean.PermissionConfig;
+import com.gxa.car.permission.bean.Rule;
 
 import java.util.List;
+
+import gxa.car.permission.CarPermissionManager;
+import gxa.car.permission.ICarPermissionManager;
 
 /**
  * @author Jack_Ou  created on 2021/3/1.

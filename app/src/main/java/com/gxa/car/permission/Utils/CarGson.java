@@ -10,7 +10,7 @@
  * DATE            NAME     DESCRIPTION
  * 2021-05-31     jieou     init
  */
-package com.gxatek.permission.Utils;
+package com.gxa.car.permission.Utils;
 
 import android.text.TextUtils;
 import android.util.Log;

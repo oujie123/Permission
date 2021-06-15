@@ -10,7 +10,7 @@
  * DATE            NAME     DESCRIPTION
  * 2021-05-31     jieou     init
  */
-package com.gxatek.permission.manager;
+package gxa.car.permission;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
+
 
 /**
  * Realize CarPermissionManager.

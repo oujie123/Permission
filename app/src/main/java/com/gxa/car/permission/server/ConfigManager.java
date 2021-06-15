@@ -10,13 +10,13 @@
  * DATE            NAME     DESCRIPTION
  * 2021-05-31     jieou     init
  */
-package com.gxatek.permission.server;
+package com.gxa.car.permission.server;
 
 import android.util.Log;
 
-import com.gxatek.permission.Utils.CarGson;
-import com.gxatek.permission.Utils.Constants;
-import com.gxatek.permission.bean.PermissionConfig;
+import com.gxa.car.permission.Utils.CarGson;
+import com.gxa.car.permission.Utils.Constants;
+import com.gxa.car.permission.bean.PermissionConfig;
 
 import java.io.File;
 

@@ -10,7 +10,7 @@
  * DATE            NAME     DESCRIPTION
  * 2021-05-31     jieou     init
  */
-package com.gxatek.permission;
+package com.gxa.car.permission;
 
 import android.app.Service;
 import android.content.Intent;
@@ -24,8 +24,8 @@ import android.os.Message;
 import android.os.UserHandle;
 import android.util.Log;
 
-import com.gxatek.permission.Utils.Constants;
-import com.gxatek.permission.server.CarPermissionManagerService;
+import com.gxa.car.permission.Utils.Constants;
+import com.gxa.car.permission.server.CarPermissionManagerService;
 
 import java.util.Iterator;
 import java.util.List;

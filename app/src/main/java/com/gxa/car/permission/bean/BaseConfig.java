@@ -10,9 +10,9 @@
  * DATE            NAME     DESCRIPTION
  * 2021-05-31     jieou     init
  */
-package com.gxatek.permission.bean;
+package com.gxa.car.permission.bean;
 
-import com.gxatek.permission.Utils.Constants;
+import com.gxa.car.permission.Utils.Constants;
 
 /**
  * Config base javabean.

@@ -10,7 +10,7 @@
 * DATE            NAME     DESCRIPTION
 * 2021-05-31     jieou     init
 */
-package com.gxatek.permission.manager;
+package gxa.car.permission;
 
 interface ICarPermissionManager {
 

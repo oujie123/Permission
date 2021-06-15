@@ -10,14 +10,15 @@
  * DATE            NAME     DESCRIPTION
  * 2021-05-31     jieou     init
  */
-package com.gxatek.permission;
+package com.gxa.car.permission;
 
 import android.app.Application;
 import android.content.Intent;
 import android.os.StrictMode;
 import android.util.Log;
 
-import com.gxatek.permission.Utils.Constants;
+import com.gxa.car.permission.Utils.Constants;
+
 
 /**
  * @author Jack_Ou  created on 2021/3/2.
