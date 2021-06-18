@@ -10,14 +10,14 @@
  * DATE            NAME     DESCRIPTION
  * 2021-05-31     jieou     init
  */
-package com.gxa.car.permission;
+package com.gxa.permission;
 
 import android.app.Application;
 import android.content.Intent;
 import android.os.StrictMode;
 import android.util.Log;
 
-import com.gxa.car.permission.Utils.Constants;
+import com.gxa.permission.Utils.Constants;
 
 
 /**

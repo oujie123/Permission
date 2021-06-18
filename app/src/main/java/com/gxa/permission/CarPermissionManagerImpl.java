@@ -10,14 +10,17 @@
  * DATE            NAME     DESCRIPTION
  * 2021-05-31     jieou     init
  */
-package gxa.car.permission;
+package com.gxa.permission;
 
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ApplicationInfo;
 import android.os.IBinder;
 import android.os.RemoteException;
+
+import com.gxa.permission.ICarPermissionManager;
 
 
 /**
@@ -27,8 +30,8 @@ import android.os.RemoteException;
  */
 public class CarPermissionManagerImpl extends CarPermissionManager {
 
-    private static final String SERVICE_PACKAGENAME = "com.gxatek.permission";
-    private static final String SERVICE_NAME = "com.gxatek.permission.CoreService";
+    private static final String SERVICE_PACKAGENAME = "com.gxa.permission";
+    private static final String SERVICE_NAME = "com.gxa.permission.CoreService";
     private ICarPermissionManager mService;
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
@@ -73,6 +76,18 @@ public class CarPermissionManagerImpl extends CarPermissionManager {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public int checkSignaturePermission(ApplicationInfo applicationInfo, String permissionName) {
+        if (mService != null) {
+            try {
+                return mService.checkSignaturePermission(applicationInfo, permissionName);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        return CarPermissionManager.PERMISSION_DEFAULT;
     }
 
     @Override

@@ -10,7 +10,7 @@
  * DATE            NAME     DESCRIPTION
  * 2021-05-31     jieou     init
  */
-package com.gxa.car.permission.server;
+package com.gxa.permission.server;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -18,8 +18,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 
-import com.gxa.car.permission.Utils.CarGson;
-import com.gxa.car.permission.Utils.Constants;
+import com.gxa.permission.Utils.CarGson;
+import com.gxa.permission.Utils.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;

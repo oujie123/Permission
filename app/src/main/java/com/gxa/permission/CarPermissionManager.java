@@ -10,9 +10,10 @@
  * DATE            NAME     DESCRIPTION
  * 2021-05-31     jieou     init
  */
-package gxa.car.permission;
+package com.gxa.permission;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 
 /**
  * @author Jack_Ou  created on 2021/3/2.
@@ -71,5 +72,14 @@ public abstract class CarPermissionManager {
      * @param success install success or failed.
      */
     public abstract void handlePackagePostInstall(String packageName,boolean success);
+
+    /**
+     * check signature permission from permission config.
+     *
+     * @param applicationInfo application info
+     * @param permissionName request permission
+     * @return CarPermissionManager.PERMISSION_GRANTED / PERMISSION_DENIED / PERMISSION_DEFAULT
+     */
+    public abstract int checkSignaturePermission(ApplicationInfo applicationInfo, String permissionName);
 }
 

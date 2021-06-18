@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     coreApp="true"
-    package="com.gxa.car.permission"
+    package="com.gxa.permission"
     android:sharedUserId="android.uid.system">
      <uses-permission android:name="android.permission.GRANT_RUNTIME_PERMISSIONS" />
      <uses-permission android:name="android.permission.REVOKE_RUNTIME_PERMISSIONS" />
@@ -13,7 +13,7 @@
         android:name=".CoreApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name">
-        <activity android:name="com.gxa.permission.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

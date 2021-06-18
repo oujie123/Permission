@@ -10,7 +10,9 @@
 * DATE            NAME     DESCRIPTION
 * 2021-05-31     jieou     init
 */
-package gxa.car.permission;
+package com.gxa.permission;
+
+import android.content.pm.ApplicationInfo;
 
 interface ICarPermissionManager {
 
@@ -21,4 +23,6 @@ interface ICarPermissionManager {
     void installPackageByPi(String packageName, String installerPackageName);
 
     void installStageByPms(String packageName, String installerPackageName);
+
+    int checkSignaturePermission(in ApplicationInfo applicationInfo, String permissionName);
 }

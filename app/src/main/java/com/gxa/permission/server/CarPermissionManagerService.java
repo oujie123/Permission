@@ -10,7 +10,7 @@
  * DATE            NAME     DESCRIPTION
  * 2021-05-31     jieou     init
  */
-package com.gxa.car.permission.server;
+package com.gxa.permission.server;
 
 import android.app.AppOpsManager;
 import android.content.Context;
@@ -23,17 +23,17 @@ import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.gxa.car.permission.Utils.Constants;
-import com.gxa.car.permission.Utils.LogUtil;
-import com.gxa.car.permission.bean.App;
-import com.gxa.car.permission.bean.Permission;
-import com.gxa.car.permission.bean.PermissionConfig;
-import com.gxa.car.permission.bean.Rule;
+import com.gxa.permission.Utils.Constants;
+import com.gxa.permission.Utils.LogUtil;
+import com.gxa.permission.bean.App;
+import com.gxa.permission.bean.Permission;
+import com.gxa.permission.bean.PermissionConfig;
+import com.gxa.permission.bean.Rule;
 
 import java.util.List;
 
-import gxa.car.permission.CarPermissionManager;
-import gxa.car.permission.ICarPermissionManager;
+import com.gxa.permission.CarPermissionManager;
+import com.gxa.permission.ICarPermissionManager;
 
 /**
  * @author Jack_Ou  created on 2021/3/1.
@@ -380,6 +380,7 @@ public class CarPermissionManagerService extends ICarPermissionManager.Stub {
     /**
      * check signature permission from permission config.
      */
+    @Override
     public int checkSignaturePermission(ApplicationInfo applicationInfo, String permissionName) {
         if (applicationInfo == null || TextUtils.isEmpty(permissionName)) {
             return CarPermissionManager.PERMISSION_DEFAULT;

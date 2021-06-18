@@ -10,9 +10,9 @@
  * DATE            NAME     DESCRIPTION
  * 2021-05-31     jieou     init
  */
-package com.gxa.car.permission.bean;
+package com.gxa.permission.bean;
 
-import com.gxa.car.permission.Utils.Constants;
+import com.gxa.permission.Utils.Constants;
 
 /**
  * Config base javabean.
