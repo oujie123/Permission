@@ -37,14 +37,14 @@ public class CarGson {
     /**
      * get javabean from json file.
      */
-    public <T> T getObjectFromJsonFile(String fileDir,Class<T> clazz) {
+    public <T> T getObjectFromJsonFile(String fileDir, Class<T> clazz) {
         String json = readJsonFile(fileDir);
         if (!TextUtils.isEmpty(json)) {
             try {
                 Gson gson = new Gson();
-                return gson.fromJson(json,clazz);
+                return gson.fromJson(json, clazz);
             } catch (Exception exception) {
-                Log.e(TAG,"readPermissionConfig fromJson error : " + json,exception);
+                LogUtil.e("readPermissionConfig fromJson error : " + json, exception);
             }
         }
         return null;
@@ -57,12 +57,13 @@ public class CarGson {
         String json = readJsonFile(fileDir);
         if (!TextUtils.isEmpty(json)) {
             try {
-                Log.i(TAG,"getObjectFromJsonFile json : " + json);
+                LogUtil.i("getObjectFromJsonFile json : " + json);
                 Gson gson = new Gson();
-                Type type = new TypeToken<T>(){}.getType();
-                return gson.fromJson(json,type);
+                Type type = new TypeToken<T>() {
+                }.getType();
+                return gson.fromJson(json, type);
             } catch (Exception exception) {
-                Log.e(TAG,"readPermissionConfig fromJson error : " + json,exception);
+                LogUtil.e("readPermissionConfig fromJson error : " + json, exception);
             }
         }
         return null;
@@ -71,16 +72,16 @@ public class CarGson {
     /**
      * write javabean into json file.
      */
-    public boolean writeObjectToJsonFile(String fileDir,Object object) {
+    public boolean writeObjectToJsonFile(String fileDir, Object object) {
         if (object == null || TextUtils.isEmpty(fileDir)) {
             return false;
         }
         try {
             Gson gson = new Gson();
             String json = gson.toJson(object);
-            return writeToJsonFile(fileDir,json);
+            return writeToJsonFile(fileDir, json);
         } catch (Exception exception) {
-            Log.e(TAG,"writeObjectToJsonFile error : ",exception);
+            LogUtil.e("writeObjectToJsonFile error : ", exception);
         }
         return false;
     }
@@ -92,7 +93,7 @@ public class CarGson {
         File jsonFile = new File(dir);
 
         if (!jsonFile.exists()) {
-            Log.w(TAG, "readJsonFile <" + dir + "> not exist");
+            LogUtil.w("readJsonFile <" + dir + "> not exist");
             return null;
         }
 
@@ -111,7 +112,7 @@ public class CarGson {
             }
             return stringBuilder.toString();
         } catch (IOException exception) {
-            Log.e(TAG, "readJsonFile IOException",exception);
+            LogUtil.e("readJsonFile IOException", exception);
         } finally {
             closeQuietly(inputStream);
             closeQuietly(inputStreamReader);
@@ -127,7 +128,7 @@ public class CarGson {
         }
 
         if (TextUtils.isEmpty(content)) {
-            Log.w(TAG, "writeToJsonFile() saveContent is empty");
+            LogUtil.w("writeToJsonFile() saveContent is empty");
             return false;
         }
 
@@ -142,10 +143,10 @@ public class CarGson {
             fos = new FileOutputStream(filePath);
             fos.write(bytesArray);
             fos.flush();
-            Log.i(TAG, "writeToJsonFile() Success!!!");
+            LogUtil.i("writeToJsonFile() Success!!!");
             return true;
         } catch (IOException exception) {
-            Log.w(TAG, "writeToJsonFile() IOException: " + exception);
+            LogUtil.w("writeToJsonFile() IOException: " + exception);
             return false;
         } finally {
             closeQuietly(fos);

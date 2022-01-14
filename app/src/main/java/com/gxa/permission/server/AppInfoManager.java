@@ -17,9 +17,9 @@ import android.content.pm.PackageManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-
 import com.gxa.permission.Utils.CarGson;
 import com.gxa.permission.Utils.Constants;
+import com.gxa.permission.Utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,11 +111,11 @@ public class AppInfoManager {
      */
     public boolean isPresetApp(String packageName) {
         if (TextUtils.isEmpty(packageName)) {
-            Log.w(TAG,"packageName cannot be null when check preset app");
+            LogUtil.w("packageName cannot be null when check preset app");
             return false;
         }
         if (mPm == null) {
-            Log.w(TAG,"PackageManager is null");
+            LogUtil.w("PackageManager is null");
             return false;
         }
         ApplicationInfo appInfo = null;
@@ -126,7 +126,7 @@ public class AppInfoManager {
         }
         if (appInfo != null) {
             if (TextUtils.isEmpty(appInfo.sourceDir)) {
-                Log.w(TAG,"cannot found the apk path with the packageName : " + packageName);
+                LogUtil.w("cannot found the apk path with the packageName : " + packageName);
             } else {
                 return checkPresetApp(appInfo.sourceDir);
             }
@@ -140,7 +140,7 @@ public class AppInfoManager {
     public boolean isPresetApp(ApplicationInfo appInfo) {
         if (appInfo != null) {
             if (TextUtils.isEmpty(appInfo.sourceDir)) {
-                Log.w(TAG,"cannot found the apk path with the packageName : " + appInfo);
+                LogUtil.w("cannot found the apk path with the packageName : " + appInfo);
             } else {
                 return checkPresetApp(appInfo.sourceDir);
             }
@@ -169,7 +169,7 @@ public class AppInfoManager {
 
     private boolean checkInstallPackage(String packageName) {
         if (mPm == null) {
-            Log.w(TAG,"PackageManager is null");
+            LogUtil.w("PackageManager is null");
             return false;
         }
         String installerPackageName = mPm.getInstallerPackageName(packageName);

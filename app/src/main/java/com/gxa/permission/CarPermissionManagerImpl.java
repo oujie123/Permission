@@ -20,8 +20,6 @@ import android.content.pm.ApplicationInfo;
 import android.os.IBinder;
 import android.os.RemoteException;
 
-import com.gxa.permission.ICarPermissionManager;
-
 
 /**
  * Realize CarPermissionManager.

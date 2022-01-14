@@ -12,9 +12,8 @@
  */
 package com.gxa.permission.bean;
 
-import android.util.Log;
-
 import com.gxa.permission.Utils.Constants;
+import com.gxa.permission.Utils.LogUtil;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -26,7 +25,6 @@ import java.util.List;
  * @author Jack_Ou  created on 2021/3/1.
  */
 public class PermissionConfig {
-    private static final String TAG = Constants.TAG + PermissionConfig.class.getSimpleName();
     private List<String> presetPaths;
     private List<String> presetShops;
     private List<Rule> rules;
@@ -37,7 +35,7 @@ public class PermissionConfig {
      */
     public void checkConfig() {
         if (rules == null || rules.size() == 0) {
-            Log.w(TAG, "no permission rules");
+            LogUtil.w( "no permission rules");
         } else {
             Iterator<Rule> iterator = rules.iterator();
             while (iterator.hasNext()) {

@@ -12,7 +12,7 @@
  */
 package com.gxa.permission.bean;
 
-import android.util.Log;
+import com.gxa.permission.Utils.LogUtil;
 
 import java.util.Iterator;
 import java.util.List;
@@ -44,7 +44,7 @@ public class Rule extends BaseConfig implements Comparable<Rule> {
 
     private void checkApps() {
         if (apps == null || apps.size() == 0) {
-            Log.w(TAG,"apps cannot be null when majorType value is 1");
+            LogUtil.w("apps cannot be null when majorType value is 1");
         } else {
             Iterator<App> iterator = apps.iterator();
             while (iterator.hasNext()) {
@@ -70,7 +70,7 @@ public class Rule extends BaseConfig implements Comparable<Rule> {
             case ALL_DENIED:
                 break;
             default:
-                Log.w(TAG,"Rule authorizationType error,the error authorizationType value is " + authorizationType);
+                LogUtil.w("Rule authorizationType error,the error authorizationType value is " + authorizationType);
                 checkMark++;
                 break;
         }
@@ -78,7 +78,7 @@ public class Rule extends BaseConfig implements Comparable<Rule> {
 
     private void checkPermissions() {
         if (permissions == null || permissions.size() == 0) {
-            Log.w(TAG,"permissions cannot be null when rule authorizationType value is 2");
+            LogUtil.w("permissions cannot be null when rule authorizationType value is 2");
         } else {
             Iterator<Permission> iterator = permissions.iterator();
             while (iterator.hasNext()) {
@@ -114,7 +114,7 @@ public class Rule extends BaseConfig implements Comparable<Rule> {
                 checkAuthorizationType();
                 break;
             default:
-                Log.w(TAG,"majorType error,the error majorType value is " + majorType);
+                LogUtil.w("majorType error,the error majorType value is " + majorType);
                 checkMark++;
                 break;
         }

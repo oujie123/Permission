@@ -21,9 +21,9 @@ import android.content.pm.PermissionInfo;
 import android.os.Process;
 import android.os.RemoteException;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.gxa.permission.Utils.Constants;
+import com.gxa.permission.CarPermissionManager;
+import com.gxa.permission.ICarPermissionManager;
 import com.gxa.permission.Utils.LogUtil;
 import com.gxa.permission.bean.App;
 import com.gxa.permission.bean.Permission;
@@ -32,16 +32,12 @@ import com.gxa.permission.bean.Rule;
 
 import java.util.List;
 
-import com.gxa.permission.CarPermissionManager;
-import com.gxa.permission.ICarPermissionManager;
-
 /**
  * @author Jack_Ou  created on 2021/3/1.
  */
 public class CarPermissionManagerService extends ICarPermissionManager.Stub {
 
     private static final String PLATFORM_PACKAGE_NAME = "android";
-    protected static final String TAG = Constants.TAG + CarPermissionManagerService.class.getSimpleName();
     private AppInfoManager mAppInfoManager;
     private AppOpsManager mAppOps;
     private PackageManager mPackageManager;
@@ -269,7 +265,7 @@ public class CarPermissionManagerService extends ICarPermissionManager.Stub {
     private void grantOrRevokePermissionsByConfig(PackageInfo packageInfo, int authorizationType,
                                                   String[] permissionInfos, List<Permission> permissions) {
         if (permissionInfos == null || permissionInfos.length == 0) {
-            Log.w(TAG, "package " + packageInfo.packageName + "has no permissions");
+            LogUtil.w( "package " + packageInfo.packageName + "has no permissions");
             return;
         }
         for (String permissionName : permissionInfos) {
@@ -303,9 +299,9 @@ public class CarPermissionManagerService extends ICarPermissionManager.Stub {
         }
 
         Rule rule = getRuleByPackageName(packageInfo.packageName);
-        LogUtil.info("packageName : " + packageInfo.packageName);
+        LogUtil.i("packageName : " + packageInfo.packageName);
         if (rule != null) {
-            LogUtil.info("majorType : " + rule.getMajorType());
+            LogUtil.i("majorType : " + rule.getMajorType());
             if (rule.getMajorType() == Rule.MAJORTYPE_WHITE) {
                 App whiteApp = getWhiteApp(rule, packageInfo.packageName);
                 if (whiteApp != null) {
@@ -337,7 +333,7 @@ public class CarPermissionManagerService extends ICarPermissionManager.Stub {
                 packageInfo.applicationInfo.uid, packageInfo.packageName)
                 == AppOpsManager.MODE_ALLOWED;
         if (!appOpAllowed) {
-            LogUtil.info("grantRuntimePermissionByPms -- packageName : "
+            LogUtil.i("grantRuntimePermissionByPms -- packageName : "
                     + packageInfo.packageName
                     + " | appOp : "
                     + appOp);
@@ -351,7 +347,7 @@ public class CarPermissionManagerService extends ICarPermissionManager.Stub {
         }
         int permissionResult = checkPermissionFromPms(packageName, permission);
         if (permissionResult != PackageManager.PERMISSION_GRANTED) {
-            LogUtil.info("package name ("
+            LogUtil.i("package name ("
                     + packageName
                     + ") runtime permission ("
                     + permission + ") is GRANTED");
@@ -385,13 +381,13 @@ public class CarPermissionManagerService extends ICarPermissionManager.Stub {
         if (applicationInfo == null || TextUtils.isEmpty(permissionName)) {
             return CarPermissionManager.PERMISSION_DEFAULT;
         }
-        LogUtil.info("checkSignaturePermission -- packageName : "
+        LogUtil.i("checkSignaturePermission -- packageName : "
                 + applicationInfo.packageName
                 + " | permissionName : "
                 + permissionName);
         Rule rule = getRuleByPackageName(applicationInfo);
         if (rule != null) {
-            LogUtil.info("checkSignaturePermission -- rule majorType : " + rule.getMajorType());
+            LogUtil.i("checkSignaturePermission -- rule majorType : " + rule.getMajorType());
             if (rule.getMajorType() == Rule.MAJORTYPE_WHITE) {
                 App whiteApp = getWhiteApp(rule, applicationInfo.packageName);
                 if (whiteApp != null) {
@@ -408,7 +404,7 @@ public class CarPermissionManagerService extends ICarPermissionManager.Stub {
      * grant applications permissions with permission config.
      */
     public void grantPermissions(List<PackageInfo> packageInfos) {
-        LogUtil.info("packageInfos : " + packageInfos);
+        LogUtil.i("packageInfos : " + packageInfos);
         if (packageInfos == null || packageInfos.size() == 0) {
             return;
         }
@@ -419,11 +415,11 @@ public class CarPermissionManagerService extends ICarPermissionManager.Stub {
 
     @Override
     public int checkPermission(String packageName, String permissionName) throws RemoteException {
-        LogUtil.info("checkPermission -- packageName : " + packageName + " | permissionName : " + permissionName);
+        LogUtil.i("checkPermission -- packageName : " + packageName + " | permissionName : " + permissionName);
         if (!TextUtils.isEmpty(packageName) && !TextUtils.isEmpty(permissionName)) {
             Rule rule = getRuleByPackageName(packageName);
             if (rule != null) {
-                LogUtil.info("checkPermission -- rule majorType : " + rule.getMajorType());
+                LogUtil.i("checkPermission -- rule majorType : " + rule.getMajorType());
                 if (rule.getMajorType() == Rule.MAJORTYPE_WHITE) {
                     App whiteApp = getWhiteApp(rule, packageName);
                     if (whiteApp != null) {
@@ -437,14 +433,14 @@ public class CarPermissionManagerService extends ICarPermissionManager.Stub {
                 return CarPermissionManager.PERMISSION_DEFAULT;
             }
         } else {
-            Log.w(TAG, "checkPermission -- packageName or permissionName is null!");
+            LogUtil.w( "checkPermission -- packageName or permissionName is null!");
             return CarPermissionManager.PERMISSION_DEFAULT;
         }
     }
 
     @Override
     public void handlePackagePostInstall(String packageName, boolean success) throws RemoteException {
-        LogUtil.info("handlePackagePostInstall -- packageName : "
+        LogUtil.i("handlePackagePostInstall -- packageName : "
                 + packageName
                 + " | success : "
                 + success);
@@ -453,7 +449,7 @@ public class CarPermissionManagerService extends ICarPermissionManager.Stub {
 
     @Override
     public void installPackageByPi(String packageName, String installerPackageName) throws RemoteException {
-        LogUtil.info("installPackageByPi -- packageName : "
+        LogUtil.i("installPackageByPi -- packageName : "
                 + packageName
                 + " | installerPackageName : "
                 + installerPackageName);
@@ -462,7 +458,7 @@ public class CarPermissionManagerService extends ICarPermissionManager.Stub {
 
     @Override
     public void installStageByPms(String packageName, String installerPackageName) throws RemoteException {
-        LogUtil.info("installStageByPms -- packageName : "
+        LogUtil.i("installStageByPms -- packageName : "
                 + packageName
                 + " | installerPackageName : "
                 + installerPackageName);

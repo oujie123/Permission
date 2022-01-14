@@ -19,7 +19,6 @@ import android.content.pm.ApplicationInfo;
  * @author Jack_Ou  created on 2021/3/2.
  */
 public abstract class CarPermissionManager {
-    protected static final String TAG = CarPermissionManager.class.getSimpleName();
 
     public static final int PERMISSION_GRANTED = 1;
     public static final int PERMISSION_DENIED = 2;

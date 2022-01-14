@@ -1,18 +1,18 @@
 /**
  * Copyright (C) 2021 Galaxy Auto Technology
- *
+ * <p>
  * All Rights Reserved by Galaxy Auto Technology Co., Ltd and its affiliates.
  * You may not use, copy, distribute, modify, transmit in any form this file
  * except in compliance with Galaxy Auto Technology in writing by applicable law.
- *
+ * <p>
  * Edit History
- *
+ * <p>
  * DATE            NAME     DESCRIPTION
  * 2021-05-31     jieou     init
  */
 package com.gxa.permission.bean;
 
-import android.util.Log;
+import com.gxa.permission.Utils.LogUtil;
 
 import java.util.Iterator;
 import java.util.List;
@@ -65,7 +65,7 @@ public class App extends BaseConfig {
     public boolean isValid() {
         checkMark = 0;
         if (packageNames == null || packageNames.size() == 0) {
-            Log.w(TAG,"app packageNames cannot be null");
+            LogUtil.w("app packageNames cannot be null");
             checkMark++;
         }
         checkAuthorizationType();
@@ -81,7 +81,7 @@ public class App extends BaseConfig {
             case Rule.ALL_DENIED:
                 break;
             default:
-                Log.w(TAG,"App authorizationType error,the error authorizationType value is " + authorizationType);
+                LogUtil.w("App authorizationType error,the error authorizationType value is " + authorizationType);
                 checkMark++;
                 break;
         }
@@ -89,7 +89,7 @@ public class App extends BaseConfig {
 
     private void checkPermissions() {
         if (permissions == null || permissions.size() == 0) {
-            Log.w(TAG,"permissions cannot be null when app authorizationType value is PART_GRANTED");
+            LogUtil.w("permissions cannot be null when app authorizationType value is PART_GRANTED");
         } else {
             Iterator<Permission> iterator = permissions.iterator();
             while (iterator.hasNext()) {

@@ -21,7 +21,6 @@ import com.gxa.permission.Utils.Constants;
  */
 public abstract class BaseConfig
 {
-    protected static final String TAG = Constants.TAG + BaseConfig.class.getSimpleName();
     protected int checkMark;
 
     /**

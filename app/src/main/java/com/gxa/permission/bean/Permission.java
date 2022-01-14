@@ -13,7 +13,8 @@
 package com.gxa.permission.bean;
 
 import android.text.TextUtils;
-import android.util.Log;
+
+import com.gxa.permission.Utils.LogUtil;
 
 /**
  * Permission info javabean.
@@ -44,7 +45,7 @@ public class Permission extends BaseConfig {
     public boolean isValid() {
         checkMark = 0;
         if (TextUtils.isEmpty(name)) {
-            Log.w(TAG,"permission name cannot be null");
+            LogUtil.w("permission name cannot be null");
             checkMark++;
         }
         return checkMark <= 0;

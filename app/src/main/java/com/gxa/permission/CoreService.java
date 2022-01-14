@@ -22,9 +22,8 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.UserHandle;
-import android.util.Log;
 
-import com.gxa.permission.Utils.Constants;
+import com.gxa.permission.Utils.LogUtil;
 import com.gxa.permission.server.CarPermissionManagerService;
 
 import java.util.Iterator;
@@ -32,7 +31,6 @@ import java.util.List;
 
 public class CoreService extends Service {
     private static final int INIT_PERMISSIONS = 1;
-    private static final String TAG = Constants.TAG + CoreService.class.getSimpleName();
     private static final String THREAD_NAME = "carpermission_thread";
     private static final int FIRST_APPLICATION_UID = 10000;
     private CarPermissionManagerService mCpms;
@@ -65,7 +63,7 @@ public class CoreService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(TAG, "CoreService onCreate");
+        LogUtil.i("CoreService onCreate");
         this.mCpms = new CarPermissionManagerService(this);
         this.mHandlerThread = new HandlerThread(THREAD_NAME);
         this.mHandlerThread.start();

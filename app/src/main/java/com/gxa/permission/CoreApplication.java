@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2021 Galaxy Auto Technology
- *
+ * <p>
  * All Rights Reserved by Galaxy Auto Technology Co., Ltd and its affiliates.
  * You may not use, copy, distribute, modify, transmit in any form this file
  * except in compliance with Galaxy Auto Technology in writing by applicable law.
- *
+ * <p>
  * Edit History
- *
+ * <p>
  * DATE            NAME     DESCRIPTION
  * 2021-05-31     jieou     init
  */
@@ -14,10 +14,11 @@ package com.gxa.permission;
 
 import android.app.Application;
 import android.content.Intent;
-import android.os.StrictMode;
+import android.os.SystemProperties;
 import android.util.Log;
 
 import com.gxa.permission.Utils.Constants;
+import com.gxa.permission.Utils.LogUtil;
 
 
 /**
@@ -29,8 +30,9 @@ public class CoreApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "CoreApplication start");
+        LogUtil.d("CoreApplication start");
         startService(new Intent(this, CoreService.class));
+        Log.e(TAG, "debug:" + SystemProperties.getInt("ro.debuggable", 0));
     }
 
 }
